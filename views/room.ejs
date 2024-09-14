@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Room <%= roomName %>
+  </title>
+  <link rel="stylesheet" href="/room.css">
+  <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <div class="whatsapp-style-header">
+    <h1>Room: <%= roomName %>
+    </h1>
+    <a href="/" class="back-btn">Back to Rooms</a>
+  </div>
+
+  <div id="message-container" class="message-container">
+    <!-- Messages will be dynamically added here -->
+  </div>
+
+  <div class="message-input-container">
+    <form id="send-container" action="">
+      <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
+      <button type="submit" class="send-message-btn">Send</button>
+    </form>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/script.js"></script>
+</body>
+
+</html>

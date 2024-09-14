@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Rooms</title>
+  <link rel="stylesheet" href="/index.css">
+  <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script defer src="script.js"></script>
+</head>
+
+<body>
+  <div class="whatsapp-style-header">
+    <h1>Welcome, <%= session.user ? session.user.username : 'Guest' %>
+    </h1>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </div>
+
+  <div class="room-container">
+    <h2>Select a Room or Create New</h2>
+    <div class="room-list">
+      <% Object.keys(rooms).forEach(room=> { %>
+        <div class="room-item">
+          <p>
+            <%= room %>
+          </p>
+          <a href="/<%= room %>" class="join-room-btn">Join</a>
+        </div>
+        <% }) %>
+    </div>
+    <form action="/room" method="POST">
+      <input type="text" name="room" placeholder="Enter room name" required>
+      <button type="submit" class="create-room-btn">Create Room</button>
+    </form>
+  </div>
+</body>
+
+</html>
