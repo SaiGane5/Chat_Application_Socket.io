@@ -7,7 +7,7 @@
   <title>Room <%= roomName %>
   </title>
   <link rel="stylesheet" href="/room.css">
-  <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script defer src="https://tech-guild-chat-application.glitch.me/socket.io/socket.io.js"></script>
   <script defer src="script.js"></script>
 </head>
 
@@ -18,19 +18,20 @@
     <a href="/" class="back-btn">Back to Rooms</a>
   </div>
 
+  <div id="room-name" style="display:none;">
+    <%= roomName %>
+  </div> <!-- Hidden element to pass roomName -->
+
   <div id="message-container" class="message-container">
     <!-- Messages will be dynamically added here -->
   </div>
 
   <div class="message-input-container">
-    <form id="send-container" action="">
+    <form id="send-container" action="/<%= roomName %>">
       <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
       <button type="submit" class="send-message-btn">Send</button>
     </form>
   </div>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/script.js"></script>
 </body>
 
 </html>

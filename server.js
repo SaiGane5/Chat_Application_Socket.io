@@ -6,6 +6,7 @@ const socketIO = require('socket.io');
 const http = require('http');
 const sharedSession = require('express-socket.io-session');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config();
 
@@ -17,11 +18,18 @@ const sessionMiddleware = session({
   secret: process.env.SESSION_ID,
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { secure: false } // Set to true if using HTTPS
 });
 
 app.use(sessionMiddleware);
 io.use(sharedSession(sessionMiddleware, { autoSave: true }));
+
+app.use(cors({
+  origin: 'http://localhost:3000', // Adjust the origin to match your client-side URL
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+}));
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -33,6 +41,7 @@ app.use(express.urlencoded({ extended: true }));
 
 let rooms = [];
 
+// Load rooms from the database
 async function loadRooms() {
   try {
     const result = await pool.query('SELECT * FROM rooms');
@@ -42,9 +51,10 @@ async function loadRooms() {
   }
 }
 
-// Load rooms initially
+// Initial room loading
 loadRooms();
 
+// Authentication middleware
 function checkAuthenticated(req, res, next) {
   if (req.session.user) {
     return next();
@@ -53,21 +63,13 @@ function checkAuthenticated(req, res, next) {
 }
 
 // Routes
+app.get('/login', (req, res) => res.render('login'));
+app.get('/register', (req, res) => res.render('register'));
 
-// Login Page
-app.get('/login', (req, res) => {
-  res.render('login');
-});
-
-// Register Page
-app.get('/register', (req, res) => {
-  res.render('register');
-});
-
-// Logout Route
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/login');
+  req.session.destroy(() => {
+    res.redirect('/login');
+  });
 });
 
 app.post('/register', async (req, res) => {
@@ -93,21 +95,24 @@ app.post('/register', async (req, res) => {
   }
 });
 
-
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
 
-  if (result.rows.length > 0) {
-    const user = result.rows[0];
-    const validPassword = await bcrypt.compare(password, user.password);
-
-    if (validPassword) {
-      req.session.user = { id: user.id, username };
-      return res.redirect('/');
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      const validPassword = await bcrypt.compare(password, user.password);
+      if (validPassword) {
+        req.session.user = { id: user.id, username };
+        return res.redirect('/');
+      }
     }
+    res.redirect('/login');
+  } catch (err) {
+    console.error(err);
+    res.redirect('/login');
   }
-  res.redirect('/login');
 });
 
 app.get('/', checkAuthenticated, (req, res) => {
@@ -128,14 +133,11 @@ app.post('/room', async (req, res) => {
       return res.redirect('/');
     }
 
-    // Insert the new room
     await pool.query('INSERT INTO rooms (room_name, admin_id) VALUES ($1, $2)', [room, userId]);
 
-    // Get the newly created room
     const roomResult = await pool.query('SELECT * FROM rooms WHERE room_name = $1', [room]);
     const newRoom = roomResult.rows[0];
 
-    // Insert a record in room_members to approve the user who created the room
     await pool.query('INSERT INTO room_members (room_id, user_id, is_approved) VALUES ($1, $2, $3)', [newRoom.id, userId, true]);
 
     await loadRooms(); // Reload rooms after adding a new room
@@ -225,7 +227,7 @@ io.on('connection', socket => {
     });
 
     socket.on('disconnect', () => {
-      // Handle user disconnect logic
+      // Handle user disconnect logic if needed
     });
   } else {
     console.error('Session or session.user is undefined');

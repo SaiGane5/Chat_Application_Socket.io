@@ -1,4 +1,9 @@
-const socket = io('http://localhost:3000');
+// Ensure you pass the room name from the server to the client side
+const roomName = document.getElementById('room-name').textContent; // Example: extract from an HTML element
+
+const socket = io('http://localhost:3000', {
+  withCredentials: true
+});
 
 const messageContainer = document.getElementById('message-container');
 const messageForm = document.getElementById('send-container');

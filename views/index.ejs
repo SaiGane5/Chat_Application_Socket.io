@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat Rooms</title>
   <link rel="stylesheet" href="/index.css">
-  <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script defer src="https://tech-guild-chat-application.glitch.me/socket.io/socket.io.js"></script>
   <script defer src="script.js"></script>
 </head>
 
@@ -20,12 +20,12 @@
   <div class="room-container">
     <h2>Select a Room or Create New</h2>
     <div class="room-list">
-      <% Object.keys(rooms).forEach(room=> { %>
+      <% rooms.forEach(room=> { %>
         <div class="room-item">
           <p>
-            <%= room %>
+            <%= room.room_name %>
           </p>
-          <a href="/<%= room %>" class="join-room-btn">Join</a>
+          <a href="/<%= room.room_name %>" class="join-room-btn">Join</a>
         </div>
         <% }) %>
     </div>
