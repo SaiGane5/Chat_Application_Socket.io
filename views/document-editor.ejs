@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Editor</title>
+    <link rel="stylesheet" href="/document-editor.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="doc-header">
+            <h1>Collaborative Document Editor</h1>
+        </header>
+
+        <div class="editor-toolbar">
+            <button onclick="formatDoc('bold')"><b>B</b></button>
+            <button onclick="formatDoc('italic')"><i>I</i></button>
+            <button onclick="formatDoc('underline')"><u>U</u></button>
+            <button onclick="formatDoc('insertOrderedList')">OL</button>
+            <button onclick="formatDoc('insertUnorderedList')">UL</button>
+        </div>
+
+        <div class="doc-editor-container">
+            <iframe id="docEditor" contenteditable="true"></iframe>
+        </div>
+
+        <div class="actions">
+            <button class="save-doc-btn" onclick="saveDocument()">Save</button>
+            <button class="delete-doc-btn" onclick="deleteDocument()">Delete</button>
+        </div>
+    </div>
+
+    <script defer src="/document-editor.js"></script>
+</body>
+
+</html>

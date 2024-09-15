@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <link rel="stylesheet" href="/task-management.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="task-header">
+            <h1>Task Management System</h1>
+            <button class="create-task-btn" onclick="openTaskModal()">+ Add New Task</button>
+        </header>
+
+        <div class="task-list-container">
+            <h2>Your Tasks</h2>
+            <ul id="task-list">
+                <!-- Dynamic task entries will be inserted here -->
+                <li class="task-item">
+                    <div class="task-details">
+                        <h3>Task Name</h3>
+                        <p>Description of the task goes here.</p>
+                        <p><strong>Deadline:</strong> 2024-09-30</p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="edit-btn" onclick="editTask(taskId)">Edit</button>
+                        <button class="delete-btn" onclick="deleteTask(taskId)">Delete</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Modal for Creating or Editing Task -->
+        <div id="taskModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeTaskModal()">&times;</span>
+                <h3>Create / Edit Task</h3>
+                <form id="taskForm">
+                    <label for="taskName">Task Name</label>
+                    <input type="text" id="taskName" name="taskName" required>
+
+                    <label for="taskDescription">Task Description</label>
+                    <textarea id="taskDescription" name="taskDescription" required></textarea>
+
+                    <label for="taskDeadline">Deadline</label>
+                    <input type="date" id="taskDeadline" name="taskDeadline" required>
+
+                    <button type="submit" class="save-btn">Save Task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="/task-management.js"></script>
+</body>
+
+</html>

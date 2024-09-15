@@ -6,12 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat Rooms</title>
   <link rel="stylesheet" href="/index.css">
-  <script defer src="https://tech-guild-chat-application.glitch.me/socket.io/socket.io.js"></script>
-  <script defer src="script.js"></script>
 </head>
 
 <body>
-  <div class="whatsapp-style-header">
+  <div class="header">
     <h1>Welcome, <%= session.user ? session.user.username : 'Guest' %>
     </h1>
     <a href="/logout" class="logout-btn">Logout</a>
@@ -29,6 +27,7 @@
         </div>
         <% }) %>
     </div>
+
     <form action="/room" method="POST">
       <input type="text" name="room" placeholder="Enter room name" required>
       <button type="submit" class="create-room-btn">Create Room</button>
